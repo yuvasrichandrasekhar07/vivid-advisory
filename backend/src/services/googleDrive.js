@@ -1,11 +1,8 @@
 const { google } = require('googleapis');
 const { Readable } = require('stream');
 
-if (!process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64) {
-  throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 is not set. Google Drive integration will not work.');
-}
-if (!process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID) {
-  throw new Error('GOOGLE_DRIVE_PARENT_FOLDER_ID is not set.');
+if (!process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 || !process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID) {
+  console.warn('[GoogleDrive] Drive env vars not set — file upload will be unavailable.');
 }
 
 const credentials = JSON.parse(
