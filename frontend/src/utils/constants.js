@@ -6,6 +6,11 @@ export const KARNATAKA_DISTRICTS = [
   'Udupi','Uttara Kannada','Vijayapura','Yadgir'
 ];
 
+export const KARNATAKA_HIGHLIGHTS = [
+  'Bengaluru Urban', 'Mysuru', 'Tumakuru', 'Dharwad',
+  'Belagavi', 'Hassan', 'Shivamogga', 'Mangaluru'
+];
+
 export const LAND_USE_TYPES = [
   { value: 'industrial', label: 'Industrial' },
   { value: 'residential', label: 'Residential' },
