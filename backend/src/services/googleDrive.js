@@ -1,26 +1,32 @@
 const { google } = require('googleapis');
 const { Readable } = require('stream');
 
-if (!process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 || !process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID) {
+const driveEnabled =
+  !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 &&
+  !!process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID;
+
+if (!driveEnabled) {
   console.warn('[GoogleDrive] Drive env vars not set — file upload will be unavailable.');
 }
 
-const credentials = JSON.parse(
-  Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString('utf8')
-);
-
-const auth = new google.auth.GoogleAuth({
-  credentials,
-  scopes: ['https://www.googleapis.com/auth/drive'],
-});
-
-const drive = google.drive({ version: 'v3', auth });
+let drive = null;
+if (driveEnabled) {
+  const credentials = JSON.parse(
+    Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString('utf8')
+  );
+  const auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/drive'],
+  });
+  drive = google.drive({ version: 'v3', auth });
+}
 
 /**
  * Create a subfolder inside the parent Vivid Advisory Drive folder for a listing.
  * @returns {Promise<string>} folderId
  */
 async function createListingFolder(listingId, listingTitle) {
+  if (!driveEnabled) throw new Error('Google Drive is not configured on this server.');
   const safeName = `[${listingId}] ${listingTitle}`.slice(0, 200);
   try {
     const res = await drive.files.create({
@@ -42,6 +48,7 @@ async function createListingFolder(listingId, listingTitle) {
  * @returns {Promise<{ fileId: string, webViewLink: string, webContentLink: string }>}
  */
 async function uploadFile(folderId, fileBuffer, fileName, mimeType) {
+  if (!driveEnabled) throw new Error('Google Drive is not configured on this server.');
   try {
     const res = await drive.files.create({
       requestBody: {
@@ -75,6 +82,7 @@ async function uploadFile(folderId, fileBuffer, fileName, mimeType) {
  * Delete a file from Drive. Silently swallows 404 (file already deleted).
  */
 async function deleteFile(fileId) {
+  if (!driveEnabled) return;
   try {
     await drive.files.delete({ fileId });
   } catch (err) {
