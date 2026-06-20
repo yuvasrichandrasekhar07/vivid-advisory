@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { KARNATAKA_DISTRICTS, LAND_USE_TYPES } from '../utils/constants';
+import { KARNATAKA_DISTRICTS, KARNATAKA_HIGHLIGHTS, LAND_USE_TYPES } from '../utils/constants';
 import api from '../utils/api';
 import LandCard from '../components/LandCard';
 
@@ -16,10 +16,6 @@ const HOW_IT_WORKS = [
   { icon: '🔍', role: 'Buyer / Tenant', steps: ['Post your land requirement', 'Browse matched listings', 'Conduct due diligence', 'Close the deal with legal support'] },
   { icon: '💰', role: 'Investor', steps: ['Browse investment opportunities', 'Review feasibility reports', 'Invest full or partial ownership', 'Track portfolio in dashboard'] },
   { icon: '🏗️', role: 'Developer', steps: ['Acquire listed land parcels', 'Develop industrial / commercial parks', 'List developed parks for lease', 'Connect with end users'] },
-];
-
-const Karnataka_HIGHLIGHTS = [
-  'Bengaluru Urban', 'Mysuru', 'Tumakuru', 'Dharwad', 'Belagavi', 'Hassan', 'Shivamogga', 'Mangaluru'
 ];
 
 export default function HomePage() {
